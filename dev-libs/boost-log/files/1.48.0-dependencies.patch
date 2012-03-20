@@ -1,0 +1,37 @@
+--- boost-log.orig/libs/log/build/Jamfile.v2	2012-03-19 20:28:10.000000000 -0400
++++ libs/log/build/Jamfile.v2	2012-03-19 20:30:30.546516658 -0400
+@@ -37,11 +37,7 @@
+         <toolset>gcc:<cxxflags>-fno-strict-aliasing  # avoids strict aliasing violations in other Boost components
+         <toolset>gcc-mingw:<linkflags>-Wl,--enable-auto-import
+         <toolset>gcc-cygwin:<linkflags>-Wl,--enable-auto-import
+-        <library>/boost/date_time//boost_date_time
+-        <library>/boost/filesystem//boost_filesystem
+-        <library>/boost/system//boost_system
+         <threading>single:<define>BOOST_LOG_NO_THREADS
+-        <threading>multi:<library>/boost/thread//boost_thread
+     ;
+ 
+ DEPENDS event_log_backend.cpp : simple_event_log.mc ;
+@@ -86,7 +82,15 @@
+         trivial.cpp
+         platform_log_sources
+     : ## requirements ##
+-        <define>BOOST_LOG_BUILDING_THE_LIB=1
++        <threading>single:<find-shared-library>boost_date_time
++        <threading>single:<find-shared-library>boost_regex
++        <threading>single:<find-shared-library>boost_filesystem
++        <threading>single:<find-shared-library>boost_system
++        <threading>multi:<find-shared-library>boost_date_time-mt
++        <threading>multi:<find-shared-library>boost_regex-mt
++        <threading>multi:<find-shared-library>boost_filesystem-mt
++        <threading>multi:<find-shared-library>boost_system-mt
++        <threading>multi:<find-shared-library>boost_thread-mt
+     ;
+ 
+ alias platform_log_setup_sources
+@@ -114,5 +118,4 @@
+         <link>shared:<define>BOOST_LOG_SETUP_DLL
+         <define>BOOST_LOG_SETUP_BUILDING_THE_LIB=1
+         <library>boost_log
+-        <library>/boost/regex//boost_regex
+     ;
